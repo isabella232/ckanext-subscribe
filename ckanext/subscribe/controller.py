@@ -72,14 +72,11 @@ class SubscribeController(BaseController):
                             'administrator for help'))
             return self._redirect_back_to_subscribe_page_from_request(data_dict)
         else:
-            if dataset_title:
-                h.flash_success(
-                    _('Subscription to {} was successful, please confirm '
-                      'your subscription by checking your email inbox and spam/trash folder'.format(dataset_title)))
-            else:
-                h.flash_success(
-                    _('Subscription to {} was successful, please confirm '
-                      'your subscription by checking your email inbox and spam/trash folder'.format(group_title)))
+            subscribe_title = dataset_title or group_title
+            h.flash_success(
+                _('Subscription to {} was successful, please confirm '
+                    'your subscription by checking your email inbox and spam/trash folder'.format(subscribe_title)))
+
             return self._redirect_back_to_subscribe_page(
                 subscription['object_name'], subscription['object_type'])
 
