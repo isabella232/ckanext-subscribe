@@ -13,7 +13,16 @@
     margin-bottom: 5px;
 }
 #subscribe-form input {
-    width: 90px;
+    display: block;
+    margin-bottom: 5px;
+    padding: 6px 6px 6px 6px;
+    width: auto;
+}
+
+#subscribe-form .btn {
+    width: 100%;
+    display: block;
+    margin-left: 0px;
 }
 
 /* manage page */
