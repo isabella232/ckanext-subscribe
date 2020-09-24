@@ -16,11 +16,11 @@
     display: block;
     margin-bottom: 5px;
     padding: 6px 6px 6px 6px;
-    width: auto;
+    width: -webkit-fill-available;
 }
 
 #subscribe-form .btn {
-    width: 100%;
+    width: -webkit-fill-available;
     display: block;
     margin-left: 0px;
 }

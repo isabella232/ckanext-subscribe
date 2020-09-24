@@ -22,7 +22,7 @@
       <label class="control-label" for="subscribe-email">{{ _('Sign up for email updates') }}</label>
       <form method='post' action="{{ h.url_for('/subscribe/signup') }}" id="subscribe-form" enctype="multipart/form-data" class="form-inline">
         <!-- (Bootstrap 3) <div class="form-group input-group-sm"> -->
-          <input id="subscribe-email" type="email" name="email" class="form-control input-small" value="" placeholder="Email Address" />
+          <input id="subscribe-email" type="email" name="email" class="form-control input-small" value="" placeholder="Email Address"  required />
           <input id="subscribe-dataset" type="hidden" name="dataset" value="{{ pkg.name }}"` />
           <input id="subscribe-dataset-title" type="hidden" name="dataset-title" value="{{ pkg.title }}"` />
         <!-- </div> -->
