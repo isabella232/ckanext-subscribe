@@ -29,6 +29,8 @@ class SubscribeController(BaseController):
     def signup(self):
         # validate inputs
         email = request.POST.get('email')
+        dataset_title = request.POST.get('dataset-title')
+        group_title = request.POST.get('group-title')
         if not email:
             abort(400, _(u'No email address supplied'))
         email = email.strip()
@@ -70,9 +72,13 @@ class SubscribeController(BaseController):
                             'administrator for help'))
             return self._redirect_back_to_subscribe_page_from_request(data_dict)
         else:
+            subscribe_title = dataset_title or group_title
             h.flash_success(
-                _('Subscription requested. Please confirm, by clicking in the '
-                  'link in the email just sent to you'))
+                _('Subscription to {} was successful, please confirm '
+                  'your subscription by checking your email inbox and '
+                  'spam/trash folder'.format(subscribe_title))
+            )
+
             return self._redirect_back_to_subscribe_page(
                 subscription['object_name'], subscription['object_type'])
 
