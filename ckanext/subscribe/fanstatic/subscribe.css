@@ -14,7 +14,7 @@
 }
 #subscribe-form input {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     padding: 6px 6px 6px 6px;
     width: auto;
     width: -moz-available;
@@ -28,6 +28,18 @@
     display: block;
     margin-left: 0px;
 }
+
+.context-info .module-content {
+    padding: 15px;
+    padding-bottom: 0px;
+}
+
+.subscribe-nums {
+    *zoom: 1;
+    padding-top: 10px;
+    padding-bottom: 0;
+    border-top: 1px dotted #DDD;
+}   
 
 /* manage page */
 table#subscriptions {
