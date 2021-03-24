@@ -16,7 +16,7 @@
     {{ super() }}
   {% else %}
     {% resource 'subscribe/subscribe.css' %}
-    <div class="subscribe-nums">
+    <div class="nums" id="subscribe-title">
       {% import 'macros/form.html' as form %}
       <!-- {{ form.errors(error_summary) }} -->
       <label class="control-label" for="subscribe-email">{{ _('Sign up for email updates') }}</label>
