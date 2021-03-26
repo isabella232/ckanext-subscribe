@@ -10,28 +10,26 @@
     }
 }
 
-div#subscribe-module-info {
-    margin-top: 0px;
+#subscribe-form {
+    margin: 0 0 5px;
 }
-
 #subscribe-form .control-label {
     margin-bottom: 5px;
 }
 #subscribe-form input {
     display: block;
-    margin-bottom: 5px;
-    padding: 6px 6px 6px 6px;
+    margin-bottom: 10px;
+    padding: 4px 6px;
     width: auto;
     width: -moz-available;
     width: -webkit-fill-available;
 }
-
 #subscribe-form .btn {
     width: auto;
     width: -moz-available;
     width: -webkit-fill-available;
     display: block;
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 /* manage page */
