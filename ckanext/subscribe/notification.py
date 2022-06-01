@@ -4,10 +4,11 @@ from collections import defaultdict
 from ckan import model
 from ckan.model import Activity, Package, Group, Member
 from ckan.lib.dictization import model_dictize
-import ckan.plugins.toolkit as toolkit
+from ckan.plugins import toolkit
 from ckan.lib.email_notifications import string_to_timedelta
 
 from ckanext.subscribe import dictization
+from ckanext.subscribe.constants import IS_CKAN_29_OR_HIGHER
 from ckanext.subscribe.model import (
     Subscription,
     Subscribe,
@@ -171,8 +172,7 @@ def is_it_time_to_send_weekly_notifications():
         frequency=Frequency.WEEKLY.value)
     if not emails_last_sent:
         return True
-    else:
-        return most_recent_weekly_notification_datetime() > emails_last_sent
+    return most_recent_weekly_notification_datetime() > emails_last_sent
 
 
 def is_it_time_to_send_daily_notifications():
@@ -180,8 +180,7 @@ def is_it_time_to_send_daily_notifications():
         frequency=Frequency.DAILY.value)
     if not emails_last_sent:
         return True
-    else:
-        return most_recent_daily_notification_datetime() > emails_last_sent
+    return most_recent_daily_notification_datetime() > emails_last_sent
 
 
 def most_recent_weekly_notification_datetime(now=None):
@@ -192,8 +191,7 @@ def most_recent_weekly_notification_datetime(now=None):
         minutes=get_config('daily_and_weekly_notification_time').minute - now.minute)
     if this_weeks_notification_date > now:
         return this_weeks_notification_date - datetime.timedelta(days=7)
-    else:
-        return this_weeks_notification_date
+    return this_weeks_notification_date
 
 
 def most_recent_daily_notification_datetime(now=None):
@@ -203,8 +201,7 @@ def most_recent_daily_notification_datetime(now=None):
         minutes=get_config('daily_and_weekly_notification_time').minute - now.minute)
     if todays_notification_time > now:
         return todays_notification_time - datetime.timedelta(days=1)
-    else:
-        return todays_notification_time
+    return todays_notification_time
 
 
 def get_weekly_notifications(notification_datetime=None):
@@ -312,8 +309,12 @@ def dictize_notifications(subscription_activities):
     for subscription, activities in subscription_activities.items():
         subscription_dict = \
             dictization.dictize_subscription(subscription, context)
-        activity_dicts = model_dictize.activity_list_dictize(
-            activities, context)
+        if IS_CKAN_29_OR_HIGHER:
+            activity_dicts = model_dictize.activity_list_dictize(
+                activities, context, include_data=True)
+        else:
+            activity_dicts = model_dictize.activity_list_dictize(
+                activities, context)
         notifications_dictized.append(
             {
                 'subscription': subscription_dict,

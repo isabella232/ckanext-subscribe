@@ -4,9 +4,11 @@ import logging
 import datetime
 
 import ckan.plugins as p
+from ckan.lib.helpers import url_for
 from ckan.logic import validate  # put in toolkit?
 from ckan.lib.mailer import MailerException
 
+from ckanext.subscribe.constants import IS_CKAN_29_OR_HIGHER
 from ckanext.subscribe.model import Subscription, Frequency
 from ckanext.subscribe import (
     schema,
@@ -45,7 +47,7 @@ def subscribe_signup(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_signup', context, data_dict)
+    _check_access('subscribe_signup', context, data_dict)
 
     data = {
         'email': data_dict['email'],
@@ -113,7 +115,7 @@ def subscribe_verify(context, data_dict):
     model = context['model']
     user = context['user']
 
-    _check_access(u'subscribe_verify', context, data_dict)
+    _check_access('subscribe_verify', context, data_dict)
 
     code = p.toolkit.get_or_bust(data_dict, 'code')
     subscription = model.Session.query(Subscription) \
@@ -158,7 +160,7 @@ def subscribe_update(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_update', context, data_dict)
+    _check_access('subscribe_update', context, data_dict)
 
     id_ = p.toolkit.get_or_bust(data_dict, 'id')
     subscription = model.Session.query(Subscription).get(id_)
@@ -182,7 +184,7 @@ def subscribe_list_subscriptions(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_list_subscriptions', context, data_dict)
+    _check_access('subscribe_list_subscriptions', context, data_dict)
     email = p.toolkit.get_or_bust(data_dict, 'email')
 
     subscription_objs = \
@@ -198,18 +200,24 @@ def subscribe_list_subscriptions(context, data_dict):
         if package:
             subscription['object_name'] = package.name
             subscription['object_title'] = package.title
-            subscription['object_link'] = p.toolkit.url_for(
-                controller='package', action='read', id=package.name)
+            if IS_CKAN_29_OR_HIGHER:
+                subscription['object_link'] = url_for('dataset.read', id=package.name)
+            else:
+                subscription['object_link'] = url_for(controller='package', action='read', id=package.name)
         elif group and not group.is_organization:
             subscription['object_name'] = group.name
             subscription['object_title'] = group.title
-            subscription['object_link'] = p.toolkit.url_for(
-                controller='group', action='read', id=group.name)
+            if IS_CKAN_29_OR_HIGHER:
+                subscription['object_link'] = url_for('group.read', id=group.name)
+            else:
+                subscription['object_link'] = url_for(controller='group', action='read', id=group.name)
         elif group and group.is_organization:
             subscription['object_name'] = group.name
             subscription['object_title'] = group.title
-            subscription['object_link'] = p.toolkit.url_for(
-                controller='organization', action='read', id=group.name)
+            if IS_CKAN_29_OR_HIGHER:
+                subscription['object_link'] = url_for('organization.read', id=group.name)
+            else:
+                subscription['object_link'] = url_for(controller='organization', action='read', id=group.name)
         subscriptions.append(subscription)
     return subscriptions
 
@@ -233,7 +241,7 @@ def subscribe_unsubscribe(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_unsubscribe', context, data_dict)
+    _check_access('subscribe_unsubscribe', context, data_dict)
 
     data = {
         'email': p.toolkit.get_or_bust(data_dict, 'email'),
@@ -277,7 +285,7 @@ def subscribe_unsubscribe_all(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_unsubscribe_all', context, data_dict)
+    _check_access('subscribe_unsubscribe_all', context, data_dict)
 
     data = {
         'email': p.toolkit.get_or_bust(data_dict, 'email'),
@@ -306,7 +314,7 @@ def subscribe_request_manage_code(context, data_dict):
     '''
     model = context['model']
 
-    _check_access(u'subscribe_request_manage_code', context, data_dict)
+    _check_access('subscribe_request_manage_code', context, data_dict)
 
     email = data_dict['email']
 
@@ -326,8 +334,6 @@ def subscribe_request_manage_code(context, data_dict):
         log.error('Could not email manage code: {}'.format(exc))
         raise
 
-    return None
-
 
 def subscribe_send_any_notifications(context, data_dict):
     '''Check for activity and for any subscribers, send emails with the
@@ -336,4 +342,3 @@ def subscribe_send_any_notifications(context, data_dict):
     notification.send_any_immediate_notifications()
     notification.send_weekly_notifications_if_its_time_to()
     notification.send_daily_notifications_if_its_time_to()
-    return None

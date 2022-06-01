@@ -58,6 +58,7 @@ setup(
 
     install_requires=[
         'enum34',
+        'six>=1.12.0',
     ],
 
     # If there are data files included in your packages that need to be
@@ -85,6 +86,9 @@ setup(
 
         [paste.paster_command]
         subscribe = ckanext.subscribe.cli:subscribeCommand
+
+        [ckan.click_command]
+        subscribe=ckanext.subscribe.cli:subscribe
 
     ''',
 
